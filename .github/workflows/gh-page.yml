@@ -59,9 +59,7 @@ jobs:
           cp dist/index.html dist/decrypt.html
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1  # Keep this version for GitHub Pages artifact upload
-        with:
-          path: ./dist
+        uses: actions/upload-pages-artifact@v1  # Ensure this is v1
 
   deploy:
     environment:
@@ -72,4 +70,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v1  # Ensure this is v1 as well
