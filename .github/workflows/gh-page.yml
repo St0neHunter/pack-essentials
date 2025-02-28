@@ -1,31 +1,45 @@
 name: github pages
 
+# ワークフローをトリガーするイベントを定義します
 on:
+  # リポジトリにプッシュされたときに実行されます
   push:
+  # 手動で実行するための 'ワークフローを実行' ボタンを使用して実行されます
   workflow_dispatch:
 
+# ワークフローの実行に必要な権限を定義します
 permissions:
+  # ファイルの内容を読み取る権限が必要です
   contents: read
+  # ページを書き込む権限が必要です
   pages: write
+  # IDトークンを書き込む権限が必要です
   id-token: write
 
+# ジョブを定義します
 jobs:
+  # ビルドジョブを定義します
   build:
+    # 仮想マシンで実行するオペレーティングシステムを指定します
     runs-on: ubuntu-latest
     steps:
+      # リポジトリの内容をチェックアウトします
       - name: checkout
         uses: actions/checkout@v3
 
+      # Goのセットアップを行います
       - name: setup go
         uses: actions/setup-go@v3
         with:
           go-version: '1.20'
 
+      # Node.js環境のセットアップを行います
       - name: setup node
         uses: actions/setup-node@v3
         with:
           node-version: 19
 
+      # Goの依存関係をキャッシュします
       - name: cache dependencies for go
         uses: actions/cache@v3
         with:
@@ -36,6 +50,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-golang-
 
+      # npm install の際にキャッシュを使うよう設定
       - name: cache dependencies for npm
         uses: actions/cache@v3
         with:
@@ -44,12 +59,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
+      # package.jsonに基づき依存パッケージをインストールする
       - name: install
         run: npm install --frozen-lockfile
 
+      # WASMをビルドします
       - name: build wasm
         run: ./build_wasm.sh
 
+      # Reactアプリをビルドします
       - name: build
         run: npm run build
       
@@ -58,8 +76,12 @@ jobs:
           cp dist/index.html dist/encrypt.html
           cp dist/index.html dist/decrypt.html
 
+      # gh-pagesブランチにdistディレクトリの中身をプッシュする
+      # gh-pagesブランチは自動的に作成される
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3  # Ensure this is v1
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
 
   deploy:
     environment:
@@ -70,4 +92,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v3  # Ensure this is v1 as well
+        uses: actions/deploy-pages@v3
