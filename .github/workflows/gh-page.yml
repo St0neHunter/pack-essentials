@@ -41,7 +41,7 @@ jobs:
 
       # Cache Go dependencies
       - name: Cache dependencies for Go
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache/go-build
@@ -52,7 +52,7 @@ jobs:
 
       # Cache npm dependencies
       - name: Cache dependencies for npm
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -77,9 +77,9 @@ jobs:
           cp dist/index.html dist/encrypt.html
           cp dist/index.html dist/decrypt.html
 
-      # Upload the built files to GitHub Pages
+      # Upload the built files to GitHub Pages (Using v4 for artifact upload)
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./dist
 
@@ -91,7 +91,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      # Deploy the built application to GitHub Pages
+      # Deploy the built application to GitHub Pages (Using v4 for deploy)
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
