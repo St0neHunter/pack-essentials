@@ -25,7 +25,7 @@ jobs:
     steps:
       # リポジトリの内容をチェックアウトします
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Goのセットアップを行います
       - name: setup go
@@ -41,7 +41,7 @@ jobs:
 
       # Goの依存関係をキャッシュします
       - name: cache dependencies for go
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache/go-build
@@ -52,7 +52,7 @@ jobs:
 
       # npm install の際にキャッシュを使うよう設定
       - name: cache dependencies for npm
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -81,6 +81,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: my-artifact-${{ matrix.runs-on }}
           path: ./dist
 
   deploy:
