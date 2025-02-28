@@ -64,11 +64,10 @@ jobs:
       - name: List dist directory
         run: ls -la dist
 
-      # Upload dist folder as artifact for deployment
+      # Upload dist folder as artifact for deployment using upload-pages-artifact
       - name: Upload artifact
-        uses: actions/upload-artifact@v2  # Use v2 to upload the artifact (not v3)
+        uses: actions/upload-pages-artifact@v1  # Corrected to use v1 for GitHub Pages artifact upload
         with:
-          name: dist  # The artifact name should match what you're downloading in the deploy job
           path: ./dist
 
   deploy:
@@ -78,11 +77,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      # Download the artifact from the build job
+      # Download the artifact from the build job using download-pages-artifact
       - name: Download artifact
-        uses: actions/download-artifact@v2  # Use v2 for downloading the artifact
+        uses: actions/download-pages-artifact@v1  # Corrected to use v1 for GitHub Pages artifact download
         with:
-          name: dist  # Ensure the artifact name matches the one used in upload
           path: ./dist
 
       - name: Deploy to GitHub Pages
