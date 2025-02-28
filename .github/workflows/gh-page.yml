@@ -79,8 +79,9 @@ jobs:
     steps:
       # Download the artifact from the build job
       - name: Download artifact
-        uses: actions/download-pages-artifact@v1
+        uses: actions/download-artifact@v3
         with:
+          name: dist
           path: ./dist
 
       - name: Deploy to GitHub Pages
