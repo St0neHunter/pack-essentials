@@ -4,6 +4,8 @@ name: github pages
 on:
   # Triggered when a push is made to the repository
   push:
+    branches:
+      - main  # Trigger when pushing to the main branch (or your primary branch)
   # Triggered manually using the 'Run workflow' button
   workflow_dispatch:
 
@@ -24,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checkout the repository
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
 
       # Setup Go environment
@@ -37,10 +39,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 19
+          node-version: '19'
 
       # Cache Go dependencies
-      - name: Cache dependencies for Go
+      - name: Cache Go dependencies
         uses: actions/cache@v4
         with:
           path: |
@@ -51,7 +53,7 @@ jobs:
             ${{ runner.os }}-golang-
 
       # Cache npm dependencies
-      - name: Cache dependencies for npm
+      - name: Cache npm dependencies
         uses: actions/cache@v4
         with:
           path: ~/.npm
@@ -72,16 +74,10 @@ jobs:
         run: npm run build
 
       # Copy index.html to additional pages
-      - name: Copy index.html
+      - name: Copy index.html to additional pages
         run: |
           cp dist/index.html dist/encrypt.html
           cp dist/index.html dist/decrypt.html
-
-      # Upload the built files to GitHub Pages (Using v4 for artifact upload)
-      - name: Upload artifact to GitHub Pages
-        uses: actions/upload-artifact@v4
-        with:
-          path: ./dist # Ensure this matches the path you want to upload
 
   # Deployment job
   deploy:
@@ -96,4 +92,6 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          artifact-name: github-pages # Specify the artifact name here
+          branch: gh-pages  # Specify the branch to deploy to
+          folder: dist      # The folder where your built assets reside (dist)
+
