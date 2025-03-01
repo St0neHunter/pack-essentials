@@ -58,16 +58,16 @@ jobs:
       - name: Build React app
         run: npm run build
 
+      - name: List contents of dist directory after build
+        run: ls -alh dist/  # List files in dist to verify the build
+
       - name: Clean dist directory
-        run: rm -rf dist/*  # Clean up the dist directory before the build
+        run: rm -rf dist/*  # Clean up dist directory before copying files
 
       - name: Copy index.html to additional pages
         run: |
           cp dist/index.html dist/encrypt.html
           cp dist/index.html dist/decrypt.html
-
-      - name: List contents of dist directory
-        run: ls -alh dist/  # List the files to verify the build
 
       # Upload the built files as an artifact
       - name: Upload build artifact
